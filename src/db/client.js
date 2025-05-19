@@ -11,6 +11,9 @@ const client = postgres(connectionString, {
     connect_timeout: 10,
     connection: {
         timezone: 'Asia/Shanghai'
+    },
+    transform: {
+        undefined: null
     }
 });
 
