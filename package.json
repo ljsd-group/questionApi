@@ -7,8 +7,8 @@
     "scripts": {
         "dev": "nodemon src/index.js",
         "dev:cloudflare": "wrangler dev --local",
-        "build": "node src/index.js",
-        "deploy": "wrangler deploy",
+        "build": "mkdir -p dist && cp -r src/* dist/",
+        "deploy": "npm run build && wrangler deploy",
         "generate": "drizzle-kit generate:pg",
         "migrate": "drizzle-kit push:pg",
         "db:studio": "drizzle-kit studio",
