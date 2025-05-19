@@ -26,44 +26,44 @@ submit.post('/submit-response', async (c) => {
         try {
             body = await c.req.json();
         } catch (e) {
-            return c.json(error('无效的请求格式，请确保发送正确的JSON数据', 400), 400);
+            return c.json(error('无效的请求格式，请确保发送正确的JSON数据', 500), 200);
         }
 
         const { deviceId, language, answers: answerList } = body;
 
         // 验证参数
         if (!deviceId) {
-            return c.json(error('缺少设备ID', 400), 400);
+            return c.json(error('缺少设备ID', 500), 200);
         }
         if (!validateDeviceId(deviceId)) {
-            return c.json(error('无效的设备ID', 400), 400);
+            return c.json(error('无效的设备ID', 500), 200);
         }
 
         if (!language) {
-            return c.json(error('缺少语言设置', 400), 400);
+            return c.json(error('缺少语言设置', 500), 200);
         }
 
         if (!Array.isArray(answerList) || answerList.length === 0) {
-            return c.json(error('无效的答案数据', 400), 400);
+            return c.json(error('无效的答案数据', 500), 200);
         }
 
         // 验证答案内容
         for (const answer of answerList) {
             if (!answer.questionKey) {
-                return c.json(error('缺少问题标识', 400), 400);
+                return c.json(error('缺少问题标识', 500), 200);
             }
             if (!answer.answer) {
-                return c.json(error('缺少答案内容', 400), 400);
+                return c.json(error('缺少答案内容', 500), 200);
             }
             if (!Array.isArray(answer.answer)) {
-                return c.json(error('答案内容必须是数组格式', 400), 400);
+                return c.json(error('答案内容必须是数组格式', 500), 200);
             }
             if (!answer.answeredTime) {
-                return c.json(error('缺少答题时间', 400), 400);
+                return c.json(error('缺少答题时间', 500), 200);
             }
             // 验证答题时间是否为数字
             if (typeof answer.answeredTime !== 'number') {
-                return c.json(error('答题时间必须是毫秒时间戳', 400), 400);
+                return c.json(error('答题时间必须是毫秒时间戳', 500), 200);
             }
         }
 
@@ -120,7 +120,7 @@ submit.post('/submit-response', async (c) => {
         return c.json(success(result), 200);
     } catch (err) {
         console.error('提交答卷失败:', err);
-        return c.json(error('提交答卷失败', 500), 500);
+        return c.json(error('提交答卷失败', 500), 200);
     }
 });
 
