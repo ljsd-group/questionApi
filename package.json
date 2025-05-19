@@ -9,7 +9,8 @@
         "dev:cloudflare": "wrangler dev --local",
         "deploy": "wrangler publish",
         "generate": "drizzle-kit generate",
-        "migrate": "drizzle-kit push"
+        "migrate": "drizzle-kit push",
+        "db:init": "node src/db/init.js"
     },
     "dependencies": {
         "@hono/node-server": "^1.3.0",
