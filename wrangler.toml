@@ -6,3 +6,9 @@ compatibility_flags = ["nodejs_compat"]
 [vars]
 DATABASE_URL = "postgresql://stock-question_owner:npg_OqrNj3SDlH2M@ep-withered-resonance-a46siw1o-pooler.us-east-1.aws.neon.tech/stock-question?sslmode=require"
 
+# wrangler.toml (wrangler v3.88.0^)
+[observability.logs]
+enabled = true
+
+
+
