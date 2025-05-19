@@ -1,8 +1,8 @@
 import { Hono } from 'hono';
-import { readFileSync } from 'node:fs';
+import { readFileSync } from 'fs';
 import { parse } from 'yaml';
-import { join } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { join } from 'path';
+import { fileURLToPath } from 'url';
 
 const docs = new Hono();
 const __dirname = fileURLToPath(new URL('.', import.meta.url));
