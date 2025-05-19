@@ -8,6 +8,7 @@ import { eq } from 'drizzle-orm';
 const submit = new Hono();
 
 // 获取当前时间（UTC+8）
+
 const getCurrentTime = () => {
     const now = new Date();
     // 获取当前时区的偏移量（分钟）
@@ -18,6 +19,27 @@ const getCurrentTime = () => {
     // 从UTC时间计算UTC+8时间
     const utc8Time = new Date(utcTime.getTime() + (8 * 60 * 60 * 1000));
     return utc8Time;
+};
+
+// 将时间戳转换为UTC+8时间
+const convertTimestampToUTC8 = (timestamp) => {
+    try {
+        // 确保时间戳是数字
+        const ts = Number(timestamp);
+        if (isNaN(ts)) {
+            throw new Error('无效的时间戳');
+        }
+        // 创建日期对象
+        const date = new Date(ts);
+        if (isNaN(date.getTime())) {
+            throw new Error('无效的日期');
+        }
+        return new Date(date.getTime() + (8 * 60 * 60 * 1000));
+    } catch (err) {
+        console.error('时间戳转换失败:', err, '时间戳:', timestamp);
+        // 如果转换失败，返回当前时间
+        return getCurrentTime();
+    }
 };
 
 submit.post('/submit-response', async (c) => {
@@ -62,9 +84,9 @@ submit.post('/submit-response', async (c) => {
                 return c.json(error('缺少答题时间', 500), 200);
             }
             // 验证答题时间是否为数字
-            if (typeof answer.answeredTime !== 'number') {
-                return c.json(error('答题时间必须是毫秒时间戳', 500), 200);
-            }
+            // if (typeof answer.answeredTime !== 'number') {
+            //     return c.json(error('答题时间必须是毫秒时间戳', 500), 200);
+            // }
         }
 
         // 使用事务保存数据
@@ -109,7 +131,7 @@ submit.post('/submit-response', async (c) => {
                 responseId: response.id,
                 questionKey: answer.questionKey,
                 answerContent: answer.answer,
-                answeredTime: answer.answeredTime // 直接使用毫秒时间戳
+                answeredTime: convertTimestampToUTC8(answer.answeredTime) // 转换时间戳为UTC+8时间
             }));
 
             await tx.insert(answers).values(answerValues);

@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS answers (
     response_id INTEGER REFERENCES responses(id),
     question_key VARCHAR(50) NOT NULL,
     answer_content JSONB NOT NULL,
-    answered_time INTEGER,
+    answered_time TIMESTAMP,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

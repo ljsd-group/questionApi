@@ -15,6 +15,6 @@ export const answers = pgTable('answers', {
     responseId: integer('response_id').references(() => responses.id),
     questionKey: varchar('question_key', { length: 50 }).notNull(),
     answerContent: jsonb('answer_content').notNull(),
-    answeredTime: integer('answered_time'), // 回答用时（毫秒）
+    answeredTime: timestamp('answered_time'),
     createdAt: timestamp('created_at').defaultNow()
 }); 
