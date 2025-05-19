@@ -1,7 +1,7 @@
 // 成功响应
 export const success = (data = null, message = 'success') => {
     return {
-        status: 200,
+        code: 200,
         message,
         data
     };
@@ -10,7 +10,7 @@ export const success = (data = null, message = 'success') => {
 // 错误响应
 export const error = (message = 'error', status = 500) => {
     return {
-        status,
+        code: status,
         message,
         data: null
     };

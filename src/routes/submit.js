@@ -3,6 +3,7 @@ import { db } from '../db/client.js';
 import { responses, answers } from '../db/schema.js';
 import { success, error } from '../utils/response.js';
 import { validateDeviceId, validateLanguage, validateAnswerContent } from '../utils/validator.js';
+import { eq } from 'drizzle-orm';
 
 const submit = new Hono();
 
@@ -54,15 +55,40 @@ submit.post('/submit-response', async (c) => {
 
         // 使用事务保存数据
         const result = await db.transaction(async (tx) => {
-            // 创建答卷记录
-            const [response] = await tx
-                .insert(responses)
-                .values({
-                    deviceId,
-                    language,
-                    completedAt: completedAt ? new Date(completedAt) : new Date()
-                })
-                .returning();
+            // 检查设备ID是否存在
+            const existingResponse = await tx
+                .select()
+                .from(responses)
+                .where(eq(responses.deviceId, deviceId))
+                .limit(1);
+
+            let response;
+            if (existingResponse.length > 0) {
+                // 更新现有记录
+                [response] = await tx
+                    .update(responses)
+                    .set({
+                        language,
+                        completedAt: completedAt ? new Date(completedAt) : new Date()
+                    })
+                    .where(eq(responses.deviceId, deviceId))
+                    .returning();
+
+                // 删除旧的答案记录
+                await tx
+                    .delete(answers)
+                    .where(eq(answers.responseId, response.id));
+            } else {
+                // 创建新记录
+                [response] = await tx
+                    .insert(responses)
+                    .values({
+                        deviceId,
+                        language,
+                        completedAt: completedAt ? new Date(completedAt) : new Date()
+                    })
+                    .returning();
+            }
 
             // 保存答案记录
             const answerValues = answerList.map(answer => ({
