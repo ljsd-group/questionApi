@@ -9,11 +9,21 @@ const check = new Hono();
 
 check.post('/check-device', async (c) => {
     try {
-        const { deviceId } = await c.req.json();
+        let body;
+        try {
+            body = await c.req.json();
+        } catch (e) {
+            return c.json(error('无效的请求格式，请确保发送正确的JSON数据', 400), 400);
+        }
+
+        const { deviceId } = body;
+        if (!deviceId) {
+            return c.json(error('缺少设备ID', 400), 400);
+        }
 
         // 验证设备ID
         if (!validateDeviceId(deviceId)) {
-            return c.json(error('无效的设备ID'));
+            return c.json(error('无效的设备ID', 400), 400);
         }
 
         // 检查设备是否已提交过答卷
@@ -25,10 +35,10 @@ check.post('/check-device', async (c) => {
 
         return c.json(success({
             hasSubmitted: existingResponse.length > 0
-        }));
+        }), 200);
     } catch (err) {
         console.error('检查设备失败:', err);
-        return c.json(error('检查设备失败'));
+        return c.json(error('检查设备失败', 500), 500);
     }
 });
 
