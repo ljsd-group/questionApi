@@ -1,5 +1,5 @@
 import { Hono } from 'hono';
-import { db } from '../db/client.js';
+import { getDB } from '../db/index.js';
 import { responses, answers } from '../db/schema.js';
 import { success, error } from '../utils/response.js';
 import { validateDeviceId } from '../utils/validator.js';
@@ -8,7 +8,6 @@ import { eq } from 'drizzle-orm';
 const submit = new Hono();
 
 // 获取当前时间（UTC+8）
-
 const getCurrentTime = () => {
     const now = new Date();
     // 获取当前时区的偏移量（分钟）
@@ -83,63 +82,57 @@ submit.post('/submit-response', async (c) => {
             if (!answer.answeredTime) {
                 return c.json(error('缺少答题时间', 500), 200);
             }
-            // 验证答题时间是否为数字
-            // if (typeof answer.answeredTime !== 'number') {
-            //     return c.json(error('答题时间必须是毫秒时间戳', 500), 200);
-            // }
         }
 
-        // 使用事务保存数据
-        const result = await db.transaction(async (tx) => {
-            // 检查设备ID是否存在
-            const existingResponse = await tx
-                .select()
-                .from(responses)
+        // 获取新的数据库连接
+        const db = getDB(c.env);
+
+        // 检查设备ID是否存在
+        const existingResponse = await db
+            .select()
+            .from(responses)
+            .where(eq(responses.deviceId, deviceId))
+            .limit(1);
+
+        let response;
+        if (existingResponse.length > 0) {
+            // 更新现有记录
+            [response] = await db
+                .update(responses)
+                .set({
+                    language,
+                    completedAt: getCurrentTime()
+                })
                 .where(eq(responses.deviceId, deviceId))
-                .limit(1);
+                .returning();
 
-            let response;
-            if (existingResponse.length > 0) {
-                // 更新现有记录
-                [response] = await tx
-                    .update(responses)
-                    .set({
-                        language,
-                        completedAt: getCurrentTime()
-                    })
-                    .where(eq(responses.deviceId, deviceId))
-                    .returning();
+            // 删除旧的答案记录
+            await db
+                .delete(answers)
+                .where(eq(answers.responseId, response.id));
+        } else {
+            // 创建新记录
+            [response] = await db
+                .insert(responses)
+                .values({
+                    deviceId,
+                    language,
+                    completedAt: getCurrentTime()
+                })
+                .returning();
+        }
 
-                // 删除旧的答案记录
-                await tx
-                    .delete(answers)
-                    .where(eq(answers.responseId, response.id));
-            } else {
-                // 创建新记录
-                [response] = await tx
-                    .insert(responses)
-                    .values({
-                        deviceId,
-                        language,
-                        completedAt: getCurrentTime()
-                    })
-                    .returning();
-            }
+        // 保存答案记录
+        const answerValues = answerList.map(answer => ({
+            responseId: response.id,
+            questionKey: answer.questionKey,
+            answerContent: answer.answer,
+            answeredTime: convertTimestampToUTC8(answer.answeredTime)
+        }));
 
-            // 保存答案记录
-            const answerValues = answerList.map(answer => ({
-                responseId: response.id,
-                questionKey: answer.questionKey,
-                answerContent: answer.answer,
-                answeredTime: convertTimestampToUTC8(answer.answeredTime) // 转换时间戳为UTC+8时间
-            }));
+        await db.insert(answers).values(answerValues);
 
-            await tx.insert(answers).values(answerValues);
-
-            return response;
-        });
-
-        return c.json(success(result), 200);
+        return c.json(success(response), 200);
     } catch (err) {
         console.error('提交答卷失败:', err);
         return c.json(error('提交答卷失败', 500), 200);

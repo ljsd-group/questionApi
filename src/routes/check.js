@@ -1,5 +1,5 @@
 import { Hono } from 'hono';
-import { db } from '../db/client.js';
+import { getDB } from '../db/index.js';
 import { responses } from '../db/schema.js';
 import { success, error } from '../utils/response.js';
 import { validateDeviceId } from '../utils/validator.js';
@@ -25,6 +25,9 @@ check.post('/check-device', async (c) => {
         if (!validateDeviceId(deviceId)) {
             return c.json(error('无效的设备ID', 400), 400);
         }
+
+        // 创建数据库连接
+        const db = getDB(c.env);
 
         // 检查设备是否已提交过答卷
         const existingResponse = await db
