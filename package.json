@@ -6,11 +6,10 @@
     "main": "src/index.js",
     "scripts": {
         "dev": "wrangler dev --local --ip 0.0.0.0",
-        "deploy": "wrangler deploy",
         "build": "wrangler build",
         "package": "wrangler build --outdir=dist",
-        "generate": "drizzle-kit generate:pg",
-        "migrate": "drizzle-kit push:pg",
+        "generate": "drizzle-kit generate",
+        "migrate": "drizzle-kit push",
         "db:studio": "drizzle-kit studio",
         "db:init": "node src/db/init.js",
         "db:reset": "node src/db/reset.js"
@@ -18,7 +17,7 @@
     "dependencies": {
         "dayjs": "^1.11.13",
         "dotenv": "^16.5.0",
-        "drizzle-orm": "^0.29.5",
+        "drizzle-orm": "^0.43.1",
         "hono": "^4.0.0",
         "pg": "^8.16.0",
         "postgres": "^3.4.3",
