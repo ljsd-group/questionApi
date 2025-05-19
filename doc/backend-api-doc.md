@@ -93,13 +93,15 @@ export const answers = pgTable('answers', {
   "deviceId": "device123456",
   "language": "zh-CN",
   "answers": [
-    {
-      "questionContetn": "1、问题的内容",
+    { 
+      "questionKey":"1",
+      "questionContetn": "问题的内容",
       "answer": ["是"],
       "answeredTime": 200
     },
     {
-      "questionKey": "2、问题的内容",
+      "questionKey": "2",
+      "questionContetn": "问题的内容",
       "answer": ["1~3年"],
       "answeredTime": 150
     }
