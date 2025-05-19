@@ -1,0 +1,8 @@
+{
+    "out": "./drizzle",
+    "schema": "./src/db/schema.js",
+    "driver": "pg",
+    "dbCredentials": {
+        "connectionString": "postgresql://stock-question_owner:npg_OqrNj3SDlH2M@ep-withered-resonance-a46siw1o-pooler.us-east-1.aws.neon.tech/stock-question?sslmode=require"
+    }
+}
