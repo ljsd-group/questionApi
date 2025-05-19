@@ -23,7 +23,7 @@ async function initDatabase() {
         console.log('数据库连接成功');
 
         // 读取SQL文件
-        const sqlContent = readFileSync(join(__dirname, '../../drizzle/0000_many_fabian_cortez.sql'), 'utf8');
+        const sqlContent = readFileSync(join(__dirname, '../../drizzle/0000_initial.sql'), 'utf8');
         console.log('SQL文件读取成功');
 
         // 执行SQL
