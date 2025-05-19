@@ -7,6 +7,13 @@ import { eq } from 'drizzle-orm';
 
 const submit = new Hono();
 
+// 获取当前时间（UTC+8）
+const getCurrentTime = () => {
+    const now = new Date();
+    now.setHours(now.getHours() + 8);
+    return now;
+};
+
 submit.post('/submit-response', async (c) => {
     try {
         let body;
@@ -70,7 +77,7 @@ submit.post('/submit-response', async (c) => {
                     .update(responses)
                     .set({
                         language,
-                        completedAt: new Date()
+                        completedAt: getCurrentTime()
                     })
                     .where(eq(responses.deviceId, deviceId))
                     .returning();
@@ -86,7 +93,7 @@ submit.post('/submit-response', async (c) => {
                     .values({
                         deviceId,
                         language,
-                        completedAt: new Date()
+                        completedAt: getCurrentTime()
                     })
                     .returning();
             }

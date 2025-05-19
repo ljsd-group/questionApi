@@ -9,6 +9,9 @@ const client = postgres(connectionString, {
     max: DATABASE.MAX_CONNECTIONS,
     idle_timeout: DATABASE.IDLE_TIMEOUT,
     connect_timeout: 10,
+    connection: {
+        timezone: 'Asia/Shanghai'
+    }
 });
 
 export const db = drizzle(client, { schema }); 

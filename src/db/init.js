@@ -8,6 +8,13 @@ import { db } from './client.js';
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url));
 
+// 获取当前时间（UTC+8）
+const getCurrentTime = () => {
+    const now = new Date();
+    now.setHours(now.getHours() + 8);
+    return now;
+};
+
 async function initDatabase() {
     let sql;
     try {
@@ -27,7 +34,7 @@ async function initDatabase() {
         const [response] = await db.insert(responses).values({
             deviceId: 'test_device_1',
             language: 'zh',
-            completedAt: new Date()
+            completedAt: getCurrentTime()
         }).returning();
 
         console.log('测试数据插入成功！', response);
