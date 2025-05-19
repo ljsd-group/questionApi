@@ -1,0 +1,41 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# 问卷API项目指南
+
+## 项目结构
+项目使用Hono.js框架开发，主要入口文件是 [src/index.js](mdc:src/index.js)，它负责设置路由和中间件。
+
+## 关键文件说明
+
+### 数据库相关
+- [src/db/schema.js](mdc:src/db/schema.js) - 定义数据库模型，包含答卷表和答案表
+- [src/db/client.js](mdc:src/db/client.js) - 数据库连接配置
+
+### API路由
+- [src/routes/check.js](mdc:src/routes/check.js) - 设备验证接口
+- [src/routes/submit.js](mdc:src/routes/submit.js) - 问卷提交接口
+
+### 工具函数
+- [src/utils/response.js](mdc:src/utils/response.js) - 响应格式化工具
+- [src/utils/validator.js](mdc:src/utils/validator.js) - 数据验证工具
+
+## API接口说明
+
+### 设备验证接口
+- 路径: `/api/check-device`
+- 方法: GET
+- 功能: 验证设备是否已提交问卷
+
+### 问卷提交接口
+- 路径: `/api/submit-response`
+- 方法: POST
+- 功能: 保存问卷答案
+
+## 开发注意事项
+1. 所有数据库操作使用Drizzle ORM
+2. 确保正确处理多语言支持
+3. 注意设备ID的唯一性验证
+4. 使用事务确保数据一致性

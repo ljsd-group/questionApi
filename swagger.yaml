@@ -1,0 +1,194 @@
+openapi: 3.0.0
+info:
+  title: 调查问卷API
+  description: 基于Hono.js和Drizzle ORM的调查问卷后端API
+  version: 1.0.0
+  contact:
+    name: API Support
+    email: support@example.com
+
+servers:
+  - url: https://api.example.com
+    description: 生产环境
+  - url: https://dev-api.example.com
+    description: 开发环境
+
+tags:
+  - name: 设备验证
+    description: 设备验证相关接口
+  - name: 答卷提交
+    description: 答卷提交相关接口
+
+paths:
+  /api/check-device:
+    post:
+      tags:
+        - 设备验证
+      summary: 检查设备是否已提交答卷
+      description: 验证设备ID是否已经提交过问卷
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - deviceId
+              properties:
+                deviceId:
+                  type: string
+                  description: 设备唯一标识
+                  example: "device_123456"
+      responses:
+        '200':
+          description: 成功响应
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 0
+                  message:
+                    type: string
+                    example: "success"
+                  data:
+                    type: object
+                    properties:
+                      hasSubmitted:
+                        type: boolean
+                        description: 是否已提交
+                        example: false
+        '400':
+          description: 请求参数错误
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: 服务器错误
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/submit-response:
+    post:
+      tags:
+        - 答卷提交
+      summary: 提交问卷答案
+      description: 保存用户的问卷答案
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - deviceId
+                - language
+                - answers
+              properties:
+                deviceId:
+                  type: string
+                  description: 设备唯一标识
+                  example: "device_123456"
+                language:
+                  type: string
+                  description: 语言设置
+                  enum: [zh, en, ja]
+                  example: "zh"
+                answers:
+                  type: array
+                  description: 答案列表
+                  items:
+                    type: object
+                    required:
+                      - questionKey
+                      - answerContent
+                    properties:
+                      questionKey:
+                        type: string
+                        description: 问题标识
+                        example: "q1"
+                      answerContent:
+                        type: object
+                        description: 答案内容
+                        example: {"selected": "A"}
+                      answeredTime:
+                        type: integer
+                        description: 回答用时（毫秒）
+                        example: 5000
+      responses:
+        '200':
+          description: 成功响应
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 0
+                  message:
+                    type: string
+                    example: "success"
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        description: 答卷ID
+                        example: 1
+                      deviceId:
+                        type: string
+                        description: 设备ID
+                        example: "device_123456"
+                      language:
+                        type: string
+                        description: 语言
+                        example: "zh"
+                      createdAt:
+                        type: string
+                        format: date-time
+                        example: "2024-01-01T12:00:00Z"
+                      completedAt:
+                        type: string
+                        format: date-time
+                        example: "2024-01-01T12:05:00Z"
+        '400':
+          description: 请求参数错误
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: 服务器错误
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  schemas:
+    Error:
+      type: object
+      properties:
+        code:
+          type: integer
+          description: 错误代码
+          example: 1
+        message:
+          type: string
+          description: 错误信息
+          example: "无效的设备ID"
+        data:
+          type: null
+          description: 错误时数据为null
+
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key 
