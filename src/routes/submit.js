@@ -2,7 +2,7 @@ import { Hono } from 'hono';
 import { db } from '../db/client.js';
 import { responses, answers } from '../db/schema.js';
 import { success, error } from '../utils/response.js';
-import { validateDeviceId, validateLanguage, validateAnswerContent } from '../utils/validator.js';
+import { validateDeviceId } from '../utils/validator.js';
 import { eq } from 'drizzle-orm';
 
 const submit = new Hono();
@@ -16,7 +16,7 @@ submit.post('/submit-response', async (c) => {
             return c.json(error('无效的请求格式，请确保发送正确的JSON数据', 400), 400);
         }
 
-        const { deviceId, language, answers: answerList, completedAt } = body;
+        const { deviceId, language, answers: answerList } = body;
 
         // 验证参数
         if (!deviceId) {
@@ -29,9 +29,6 @@ submit.post('/submit-response', async (c) => {
         if (!language) {
             return c.json(error('缺少语言设置', 400), 400);
         }
-        // if (!validateLanguage(language)) {
-        //     return c.json(error('无效的语言设置', 400), 400);
-        // }
 
         if (!Array.isArray(answerList) || answerList.length === 0) {
             return c.json(error('无效的答案数据', 400), 400);
@@ -51,6 +48,10 @@ submit.post('/submit-response', async (c) => {
             if (!answer.answeredTime) {
                 return c.json(error('缺少答题时间', 400), 400);
             }
+            // 验证答题时间是否为数字
+            if (typeof answer.answeredTime !== 'number') {
+                return c.json(error('答题时间必须是毫秒时间戳', 400), 400);
+            }
         }
 
         // 使用事务保存数据
@@ -69,7 +70,7 @@ submit.post('/submit-response', async (c) => {
                     .update(responses)
                     .set({
                         language,
-                        completedAt: completedAt ? new Date(completedAt) : new Date()
+                        completedAt: new Date()
                     })
                     .where(eq(responses.deviceId, deviceId))
                     .returning();
@@ -85,7 +86,7 @@ submit.post('/submit-response', async (c) => {
                     .values({
                         deviceId,
                         language,
-                        completedAt: completedAt ? new Date(completedAt) : new Date()
+                        completedAt: new Date()
                     })
                     .returning();
             }
@@ -95,7 +96,7 @@ submit.post('/submit-response', async (c) => {
                 responseId: response.id,
                 questionKey: answer.questionKey,
                 answerContent: answer.answer,
-                answeredTime: answer.answeredTime
+                answeredTime: answer.answeredTime // 直接使用毫秒时间戳
             }));
 
             await tx.insert(answers).values(answerValues);

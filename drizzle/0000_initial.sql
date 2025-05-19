@@ -3,8 +3,8 @@ CREATE TABLE IF NOT EXISTS responses (
     id SERIAL PRIMARY KEY,
     device_id VARCHAR(100) NOT NULL,
     language VARCHAR(10) NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    completed_at TIMESTAMP
+    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+    completed_at TIMESTAMPTZ
 );
 
 -- 创建答案表
@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS answers (
     question_key VARCHAR(50) NOT NULL,
     answer_content JSONB NOT NULL,
     answered_time INTEGER,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
 );
 
 -- 创建索引
