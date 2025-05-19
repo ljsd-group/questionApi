@@ -1,6 +1,7 @@
 name = "questionnaire-api"
 main = "src/index.js"
-compatibility_date = "2024-01-01"
+compatibility_date = "2024-05-19"
+compatibility_flags = ["nodejs_compat"]
 
 [vars]
 DATABASE_URL = "postgresql://stock-question_owner:npg_OqrNj3SDlH2M@ep-withered-resonance-a46siw1o-pooler.us-east-1.aws.neon.tech/stock-question?sslmode=require"

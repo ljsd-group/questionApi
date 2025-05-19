@@ -1,9 +1,7 @@
 import { Hono } from 'hono';
-import { serve } from '@hono/node-server';
 import { cors } from 'hono/cors';
 import check from './routes/check.js';
 import submit from './routes/submit.js';
-import docs from './routes/docs.js';
 
 const app = new Hono();
 
@@ -20,7 +18,6 @@ app.use('/*', cors({
 // 注册路由
 app.route('/api', check);
 app.route('/api', submit);
-app.route('/', docs);
 
 // 错误处理
 app.onError((err, c) => {
@@ -41,12 +38,7 @@ app.notFound((c) => {
     });
 });
 
-// 启动服务器
-const port = process.env.PORT || 3000;
-console.log(`服务器运行在 http://localhost:${port}`);
-console.log(`API文档地址: http://localhost:${port}/docs`);
-
-serve({
-    fetch: app.fetch,
-    port
-}); 
+// 导出 Worker
+export default {
+    fetch: app.fetch
+}; 
