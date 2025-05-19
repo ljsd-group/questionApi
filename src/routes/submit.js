@@ -10,8 +10,14 @@ const submit = new Hono();
 // 获取当前时间（UTC+8）
 const getCurrentTime = () => {
     const now = new Date();
+    // 获取当前时区的偏移量（分钟）
+    const timezoneOffset = now.getTimezoneOffset();
     now.setHours(now.getHours() + 8);
-    return now;
+    // 计算UTC时间
+    const utcTime = new Date(now.getTime() + (timezoneOffset * 60 * 1000));
+    // 从UTC时间计算UTC+8时间
+    const utc8Time = new Date(utcTime.getTime() + (8 * 60 * 60 * 1000));
+    return utc8Time;
 };
 
 submit.post('/submit-response', async (c) => {
