@@ -4,7 +4,7 @@ compatibility_date = "2024-05-19"
 compatibility_flags = ["nodejs_compat"]
 
 [vars]
-DATABASE_URL = "postgresql://question_db:NwdNe2Mbsc8bEtGw@150.109.112.155:5432/question_db"
+DATABASE_URL = "postgresql://postgres:bXBcKw2wWybAXDtE@150.109.112.155:5432/question_db"
 
 [env.development]
 vars = { DATABASE_URL = "postgres://pguser:123456@localhost:5432/honostudy" }
