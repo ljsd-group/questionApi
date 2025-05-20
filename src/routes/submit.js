@@ -131,7 +131,10 @@ submit.post('/submit-response', async (c) => {
         }));
 
         await db.insert(answers).values(answerValues);
-
+        response.list = [
+            { lan: 'ja', imgurl: 'https://img.aimetaaid.com/stock-app-line.jpg', href: "https://works.do/R/ti/p/15800@au98" },
+            { lan: 'en', imgurl: 'https://img.aimetaaid.com/stock-app-whatsapp.jpg', href: 'https://wa.me/19495919698' }
+        ]
         return c.json(success(response), 200);
     } catch (err) {
         console.error('提交答卷失败:', err);
