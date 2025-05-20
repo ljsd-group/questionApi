@@ -12,7 +12,8 @@
         "migrate": "drizzle-kit push",
         "db:studio": "drizzle-kit studio",
         "db:init": "node src/db/init.js",
-        "db:reset": "node src/db/reset.js"
+        "db:reset": "node src/db/reset.js",
+        "db:test": "node src/db/test-connection.js"
     },
     "dependencies": {
         "dayjs": "^1.11.13",
