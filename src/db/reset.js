@@ -1,4 +1,4 @@
-import { db } from './client.js';
+import { db } from './index.js';
 import { sql } from 'drizzle-orm';
 
 async function resetDatabase() {

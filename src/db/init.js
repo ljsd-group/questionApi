@@ -4,7 +4,7 @@ import { fileURLToPath } from 'url';
 import postgres from 'postgres';
 import { getDatabaseUrl } from '../config/index.js';
 import { responses } from './schema.js';
-import { db } from './client.js';
+import { db } from './index.js';
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url));
 

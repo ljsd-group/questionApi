@@ -6,6 +6,9 @@ compatibility_flags = ["nodejs_compat"]
 [vars]
 DATABASE_URL = "postgresql://neondb_owner:npg_ZFiyhNqxn6t9@ep-autumn-mode-abq99hds-pooler.eu-west-2.aws.neon.tech/neondb?sslmode=require"
 
+[env.development]
+vars = { DATABASE_URL = "postgres://pguser:123456@localhost:5432/honostudy" }
+
 # wrangler.toml (wrangler v3.88.0^)
 [observability.logs]
 enabled = true

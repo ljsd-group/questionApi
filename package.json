@@ -5,7 +5,7 @@
     "type": "module",
     "main": "src/index.js",
     "scripts": {
-        "dev": "wrangler dev --local --ip 0.0.0.0",
+        "dev": "wrangler dev --local --ip 0.0.0.0 --env development",
         "build": "wrangler build",
         "package": "wrangler build --outdir=dist",
         "generate": "drizzle-kit generate",
