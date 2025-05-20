@@ -3,7 +3,7 @@
     "schema": "./src/db/schema.js",
     "dialect": "postgresql",
     "dbCredentials": {
-        "url": "postgresql://neondb_owner:npg_ZFiyhNqxn6t9@ep-autumn-mode-abq99hds-pooler.eu-west-2.aws.neon.tech/neondb?sslmode=require"
+        "url": "postgresql://question_db:NwdNe2Mbsc8bEtGw@150.109.112.155:5432/question_db"
     },
     "tablesFilter": [
         "responses",

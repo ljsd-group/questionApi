@@ -22,6 +22,13 @@
       "when": 1747710307122,
       "tag": "0002_majestic_amazoness",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1747736926946,
+      "tag": "0003_lying_goblin_queen",
+      "breakpoints": true
     }
   ]
 }
