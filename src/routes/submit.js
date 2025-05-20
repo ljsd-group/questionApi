@@ -135,11 +135,21 @@ submit.post('/submit-response', async (c) => {
         }));
 
         await db.insert(answers).values(answerValues);
-        response.list = [
+        const list = [
             { lan: 'ja', imgurl: 'https://img.aimetaaid.com/stock-app-line.jpg', href: "https://works.do/R/ti/p/15800@au98" },
             { lan: 'en', imgurl: 'https://img.aimetaaid.com/stock-app-whatsapp.jpg', href: 'https://wa.me/19495919698' }
-        ]
-        return c.json(success(response), 200);
+        ];
+
+        // 根据 language 匹配 list 中的 lan，如果匹配不到则使用 'ja'
+        const matchedItem = list.find(item => item.lan === response.language) || list.find(item => item.lan === 'en');
+
+        // 将匹配到的数据解构到 response 中
+        const result = {
+            ...response,
+            ...matchedItem
+        };
+
+        return c.json(success(result), 200);
     } catch (err) {
         console.error('提交答卷失败:', err);
         return c.json(error('提交答卷失败', 500), 200);
