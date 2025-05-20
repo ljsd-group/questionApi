@@ -73,6 +73,9 @@ submit.post('/submit-response', async (c) => {
             if (!answer.questionKey) {
                 return c.json(error('缺少问题标识', 500), 200);
             }
+            if (!answer.questionContetn) {
+                return c.json(error('缺少问题内容', 500), 200);
+            }
             if (!answer.answer) {
                 return c.json(error('缺少答案内容', 500), 200);
             }
@@ -126,6 +129,7 @@ submit.post('/submit-response', async (c) => {
         const answerValues = answerList.map(answer => ({
             responseId: response.id,
             questionKey: answer.questionKey,
+            questionTitle: answer.questionContetn,
             answerContent: answer.answer,
             answeredTime: convertTimestampToUTC8(answer.answeredTime)
         }));

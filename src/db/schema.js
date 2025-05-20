@@ -14,6 +14,7 @@ export const answers = pgTable('answers', {
     id: serial('id').primaryKey(),
     responseId: integer('response_id').references(() => responses.id),
     questionKey: varchar('question_key', { length: 50 }).notNull(),
+    questionTitle: varchar('question_title', { length: 255 }).notNull().default(''),
     answerContent: jsonb('answer_content').notNull(),
     answeredTime: timestamp('answered_time', { withTimezone: true }),
     createdAt: timestamp('created_at', { withTimezone: true }).defaultNow()

@@ -15,6 +15,13 @@
       "when": 1747667727879,
       "tag": "0001_complex_omega_red",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1747710307122,
+      "tag": "0002_majestic_amazoness",
+      "breakpoints": true
     }
   ]
 }

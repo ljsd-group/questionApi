@@ -1,0 +1,1 @@
+ALTER TABLE "answers" ADD COLUMN "question_title" varchar(255) NOT NULL;
