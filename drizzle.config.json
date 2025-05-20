@@ -3,7 +3,7 @@
     "schema": "./src/db/schema.js",
     "dialect": "postgresql",
     "dbCredentials": {
-        "url": "postgresql://question_db:NwdNe2Mbsc8bEtGw@150.109.112.155:5432/question_db"
+        "url": "postgresql://postgres:bXBcKw2wWybAXDtE@150.109.112.155:5432/question_db"
     },
     "tablesFilter": [
         "responses",
