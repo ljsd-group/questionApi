@@ -7,36 +7,21 @@ import { eq } from 'drizzle-orm';
 
 const submit = new Hono();
 
-// 获取当前时间（UTC+8）
+// 获取当前 UTC 时间
 const getCurrentTime = () => {
-    const now = new Date();
-    // 获取当前时区的偏移量（分钟）
-    const timezoneOffset = now.getTimezoneOffset();
-    now.setHours(now.getHours() + 8);
-    // 计算UTC时间
-    const utcTime = new Date(now.getTime() + (timezoneOffset * 60 * 1000));
-    // 从UTC时间计算UTC+8时间
-    const utc8Time = new Date(utcTime.getTime() + (8 * 60 * 60 * 1000));
-    return utc8Time;
+    return new Date();
 };
 
-// 将时间戳转换为UTC+8时间
-const convertTimestampToUTC8 = (timestamp) => {
+// 将时间戳转换为 UTC 时间
+const convertTimestampToUTC = (timestamp) => {
     try {
-        // 确保时间戳是数字
         const ts = Number(timestamp);
         if (isNaN(ts)) {
             throw new Error('无效的时间戳');
         }
-        // 创建日期对象
-        const date = new Date(ts);
-        if (isNaN(date.getTime())) {
-            throw new Error('无效的日期');
-        }
-        return new Date(date.getTime() + (8 * 60 * 60 * 1000));
+        return new Date(ts);
     } catch (err) {
         console.error('时间戳转换失败:', err, '时间戳:', timestamp);
-        // 如果转换失败，返回当前时间
         return getCurrentTime();
     }
 };
@@ -131,7 +116,7 @@ submit.post('/submit-response', async (c) => {
             questionKey: answer.questionKey,
             questionTitle: answer.questionContetn,
             answerContent: answer.answer,
-            answeredTime: convertTimestampToUTC8(answer.answeredTime)
+            answeredTime: convertTimestampToUTC(answer.answeredTime)
         }));
 
         await db.insert(answers).values(answerValues);
