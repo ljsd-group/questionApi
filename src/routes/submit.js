@@ -121,8 +121,8 @@ submit.post('/submit-response', async (c) => {
 
         await db.insert(answers).values(answerValues);
         const list = [
-            { lan: 'ja', imgurl: 'https://img.aimetaaid.com/stock-app-line.jpg', href: "https://works.do/R/ti/p/15800@au98" },
-            { lan: 'en', imgurl: 'https://img.aimetaaid.com/stock-app-whatsapp.jpg', href: 'https://wa.me/19495919698' }
+            { lan: 'ja', imgurl: 'https://img.aimetaaid.com/stock-app-line.jpg', href: "https://www.tradetutorvideosao.top" },
+            { lan: 'en', imgurl: 'https://img.aimetaaid.com/stock-app-whatsapp.jpg', href: 'https://app.tradetutorvideo.net' }
         ];
 
         // 根据 language 匹配 list 中的 lan，如果匹配不到则使用 'ja'
